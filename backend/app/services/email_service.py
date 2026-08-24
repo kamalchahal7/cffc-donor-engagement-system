@@ -3,6 +3,7 @@ import json
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+from datetime import datetime
 
 load_dotenv()
 
@@ -19,7 +20,6 @@ def send_email(receiver_email: str, subject: str, content: str):
     try:
         sg=SendGridAPIClient(api_key)
         response=sg.send(message)
-        print(response.status_code)
         return response.status_code
     except Exception as e:
         print(e)
@@ -35,7 +35,7 @@ def content():
         print(e)
         return None
 
-def subscriber_list():
+def subs_list():
     try:
         with open("app/data/subscribers.json", "r") as f:
             data = json.load(f)
@@ -44,3 +44,39 @@ def subscriber_list():
     except Exception as e:
         print (e)
         return None
+
+def subs_count():
+    subs = subs_list()
+    if subs:
+        return len(subs)
+    return 0
+
+def log_send(num_sent: int):
+    try:
+        with open("app/data/send_history.json", "r") as f:
+            data = json.load(f)
+        
+        timestamp = datetime.now().isoformat()
+        data["sends"].append({
+            "timestamp": timestamp,
+            "num_sent": num_sent
+        })
+
+        with open("app/data/send_history.json", "w") as f:
+            json.dump(data, f, indent=2)
+        
+        return True
+    except Exception as e:
+        print(e)
+        return None
+
+def get_logs():
+    try:
+        with open ("app/data/send_history.json", "r") as f:
+            data = json.load(f)
+        return data
+    except Exception as e:
+        print(e)
+        return None
+            
+            
