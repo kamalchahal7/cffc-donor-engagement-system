@@ -26,6 +26,7 @@ function Dashboard() {
             .then(response => response.json())
             .then(result => {
                 alert(result.message)
+                setTimeout(() => setSending(false), 5000)
                 setSending(false)
                 // Re-fetch updated data
                 fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
