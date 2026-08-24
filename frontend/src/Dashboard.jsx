@@ -7,27 +7,27 @@ function Dashboard() {
     const [showAll, setShowAll] = useState(false)
 
     useEffect(() => {
-        fetch("http://localhost:8000/subs_count")
+        fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
             .then(response => response.json())
             .then(data => setSubscriberCount(data.count))
 
-        fetch("http://localhost:8000/send_history")
+        fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
             .then(response => response.json())
             .then(data => setSendHistory(data.sends))
     }, [])
 
     const handleSend = () => {
         setSending(true)
-        fetch("http://localhost:8000/send_newsletter_all", { method: "POST" })
+        fetch("https://cffc-donor-engagement-system.onrender.com/send_newsletter_all", { method: "POST" })
             .then(response => response.json())
             .then(result => {
                 alert(result.message)
                 setSending(false)
                 // Re-fetch updated data
-                fetch("http://localhost:8000/send_history")
+                fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
                     .then(response => response.json())
                     .then(historyData => setSendHistory(historyData.sends))
-                fetch("http://localhost:8000/subs_count")
+                fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
                     .then(response => response.json())
                     .then(countData => setSubscriberCount(countData.count))
             })
