@@ -57,7 +57,7 @@ def log_send(num_sent: int):
         with open("app/data/send_history.json", "r") as f:
             data = json.load(f)
         
-        timestamp = datetime.now().isoformat()
+        timestamp = datetime.utcnow().isoformat() + "Z"
         data["sends"].append({
             "timestamp": timestamp,
             "num_sent": num_sent
