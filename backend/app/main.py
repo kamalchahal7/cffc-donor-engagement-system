@@ -1,6 +1,8 @@
 from fastapi import FastAPI
-from app.services.email_service import send_email, content, subs_list, subs_count, log_send, get_logs
 from fastapi.middleware.cors import CORSMiddleware
+
+from app.services.email_service import send_email, content, subs_list, subs_count, log_send, get_logs, click, click_counter
+
 
 app = FastAPI()
 app.add_middleware(
@@ -54,6 +56,15 @@ def get_count():
 @app.get("/send_history")
 def get_history():
     return get_logs()
+
+@app.get("/track_click")
+def track_click():
+    return click()
+
+@app.get("/click_count")
+def get_clicks():
+    return click_counter()
+
        
     
     

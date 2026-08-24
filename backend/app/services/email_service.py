@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from datetime import datetime
+from fastapi.responses import RedirectResponse
 
 load_dotenv()
 
@@ -72,11 +73,34 @@ def log_send(num_sent: int):
 
 def get_logs():
     try:
-        with open ("app/data/send_history.json", "r") as f:
+        with open("app/data/send_history.json", "r") as f:
             data = json.load(f)
         return data
     except Exception as e:
         print(e)
         return None
             
-            
+def click():
+    try:
+        with open("app/data/send_history.json", "r") as f:
+            data = json.load(f)
+        if "clicks" not in data:
+            data["clicks"] = 1
+        else:
+            data["clicks"] += 1
+
+        with open("app/data/send_history.json", "w") as f:
+            json.dump(data, f, indent=2)
+
+    except Exception as e:
+        print(e)
+    
+    return RedirectResponse(url="https://cffc-donor-engagement-system.vercel.app")
+
+def click_counter():
+    try:
+        with open("app/data/send_history.json", "r") as f:
+            data = json.load(f)
+        return {"clicks": data.get("clicks", 0)}
+    except:
+        return {"clicks": 0}

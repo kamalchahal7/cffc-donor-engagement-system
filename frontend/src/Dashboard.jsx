@@ -5,6 +5,7 @@ function Dashboard() {
     const [sendHistory, setSendHistory] = useState([])
     const [sending, setSending] = useState(false)
     const [showAll, setShowAll] = useState(false)
+    const [clickCount, setClickCount] = useState(0)
 
     useEffect(() => {
         fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
@@ -14,6 +15,9 @@ function Dashboard() {
         fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
             .then(response => response.json())
             .then(data => setSendHistory(data.sends))
+        fetch("https://cffc-donor-engagement-system.onrender.com/click_count")
+            .then(response => response.json())
+            .then(data => setClickCount(data.clicks))            
     }, [])
 
     const handleSend = () => {
@@ -50,6 +54,10 @@ function Dashboard() {
                     <p className='text-gray-500'>Total Sent</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
+                    <p className='text-4xl font-bold'>{clickCount}</p>
+                    <p className='text-gray-500'>Donation Page Visits</p>
+                </div>
+                <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>
                         {sendHistory.length > 0
                             ? new Date(sendHistory[sendHistory.length - 1].timestamp).toLocaleDateString()
@@ -58,8 +66,6 @@ function Dashboard() {
                     <p className='text-gray-500'>Last Newsletter</p>
                 </div>
             </div>
-
-            {/* Recent Stats Row */}
             
             {/* Send Button */}
             <div className='text-center mb-8'>
