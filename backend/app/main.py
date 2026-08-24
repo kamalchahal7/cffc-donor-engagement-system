@@ -65,7 +65,16 @@ def track_click():
 def get_clicks():
     return click_counter()
 
-       
+
+@app.post("/add_subscriber")
+def new_subscriber(email: str):
+    result = add_subscriber(email)
+    if result:
+        return {"message": "Subscriber added!"}
+    elif result is False:
+        return {"message": "Already subscribed."}
+    else:
+        return {"message": "Failed to add subscriber."}
     
     
     

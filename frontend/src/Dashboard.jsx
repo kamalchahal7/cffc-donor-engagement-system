@@ -6,6 +6,8 @@ function Dashboard() {
     const [sending, setSending] = useState(false)
     const [showAll, setShowAll] = useState(false)
     const [clickCount, setClickCount] = useState(0)
+    
+    const [newEmail, setNewEmail] = useState('')
 
     useEffect(() => {
         fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
@@ -77,6 +79,35 @@ function Dashboard() {
                         {sending ? "Sending..." : "Send Newsletter to All Subscribers"}
                 </button>
             </div>
+
+
+            {/* Add Email */}
+            <div className='text-center mb-8 flex justify-center gap-2'>
+                <input
+                    type="email"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    placeholder="Add subscriber email"
+                    className='border rounded-lg px-4 py-2'
+                />
+                <button
+                    onClick={() => {
+                        fetch("https://cffc-donor-engagement-system.onrender.com/add_subscriber?email=" + newEmail, { method: "POST" })
+                            .then(response => response.json())
+                            .then(data => {
+                                alert(data.message)
+                                setNewEmail('')
+                                fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
+                                    .then(response => response.json())
+                                    .then(countData => setSubscriberCount(countData.count))
+                            })
+                    }}
+                    className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-bold'
+                >
+                    Add
+                </button>
+            </div>
+
 
             {/* Send History */}
             <div className='max-w-2xl mx-auto'>
