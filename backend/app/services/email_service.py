@@ -106,16 +106,16 @@ def click_counter():
         return {"clicks": 0}
 
 
-def add_subscriber(new_email: str):
-    try:
-        with open("app/data/subscribers.json", "r") as f:
-            data = json.load(f)
-        if new_email not in data["subscribers"]:
-            data["subscribers"].append(new_email)
-            with open("app/data/subscribers.json", "w") as f:
-                json.dump(data, f, indent=2)
-            return True
-        return False
-    except Exception as e:
-        print(e)
-        return None
+# def add_subscriber(new_email: str):
+#     try:
+#         with open("app/data/subscribers.json", "r") as f:
+#             data = json.load(f)
+#         if new_email not in data["subscribers"]:
+#             data["subscribers"].append(new_email)
+#             with open("app/data/subscribers.json", "w") as f:
+#                 json.dump(data, f, indent=2)
+#             return True
+#         return False
+#     except Exception as e:
+#         print(e)
+#         return None

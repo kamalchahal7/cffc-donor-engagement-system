@@ -6,8 +6,8 @@ function Dashboard() {
     const [sending, setSending] = useState(false)
     const [showAll, setShowAll] = useState(false)
     const [clickCount, setClickCount] = useState(0)
-    
-    const [newEmail, setNewEmail] = useState('')
+
+    // const [newEmail, setNewEmail] = useState('')
 
     useEffect(() => {
         fetch("https://cffc-donor-engagement-system.onrender.com/subs_count")
@@ -81,7 +81,7 @@ function Dashboard() {
             </div>
 
 
-            {/* Add Email */}
+            {/* Add Email
             <div className='text-center mb-8 flex justify-center gap-2'>
                 <input
                     type="email"
@@ -106,7 +106,7 @@ function Dashboard() {
                 >
                     Add
                 </button>
-            </div>
+            </div> */}
 
 
             {/* Send History */}
