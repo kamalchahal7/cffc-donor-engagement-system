@@ -44,18 +44,18 @@ function Dashboard() {
             </h1>
 
             {/* Historical Stats Row */}
-            <div className='flex justify-center gap-8 mb-8'>
+            <div className='flex flex-col md:flex-row justify-center gap-4 md:gap-8 mb-8'>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{subscriberCount}</p>
                     <p className='text-gray-500'>Subscribers</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{sendHistory.length}</p>
-                    <p className='text-gray-500'>Total Sent</p>
+                    <p className='text-gray-500'>Newsletters Sent</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{clickCount}</p>
-                    <p className='text-gray-500'>Donation Page Visits</p>
+                    <p className='text-gray-500'>Total Donation Page Visits</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>
@@ -63,7 +63,7 @@ function Dashboard() {
                             ? new Date(sendHistory[sendHistory.length - 1].timestamp).toLocaleDateString()
                             : "N/A"}
                     </p>
-                    <p className='text-gray-500'>Last Newsletter</p>
+                    <p className='text-gray-500'>Last Newsletter Sent</p>
                 </div>
             </div>
             
