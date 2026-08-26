@@ -1,15 +1,18 @@
 import os
-import json
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-from datetime import datetime
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
+from supabase import create_client
 
 load_dotenv()
 
 api_key = os.getenv("SENDGRID_API_KEY")
 email = os.getenv("FROM_EMAIL")
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(supabase_url, supabase_key)
 
 def send_email(receiver_email: str, subject: str, content: str):
     message = Mail(
@@ -37,14 +40,7 @@ def content():
         return None
 
 def subs_list():
-    try:
-        with open("app/data/subscribers.json", "r") as f:
-            data = json.load(f)
-            emails = data["subscribers"]
-        return emails
-    except Exception as e:
-        print (e)
-        return None
+    return get_group("all")
 
 def subs_count():
     subs = subs_list()
@@ -53,58 +49,42 @@ def subs_count():
     return 0
 
 def log_send(num_sent: int):
-    try:
-        with open("app/data/send_history.json", "r") as f:
-            data = json.load(f)
-        
-        timestamp = datetime.utcnow().isoformat() + "Z"
-        data["sends"].append({
-            "timestamp": timestamp,
-            "num_sent": num_sent
-        })
-
-        with open("app/data/send_history.json", "w") as f:
-            json.dump(data, f, indent=2)
-        
-        return True
-    except Exception as e:
-        print(e)
-        return None
+    supabase.table("analytics").insert({"event_type": "send", "num_sent": num_sent}).execute()
+    return True
 
 def get_logs():
-    try:
-        with open("app/data/send_history.json", "r") as f:
-            data = json.load(f)
-        return data
-    except Exception as e:
-        print(e)
-        return None
-            
+    response = supabase.table("analytics").select("*").eq("event_type", "send").execute()
+    return {"sends": response.data}
+
 def click():
-    try:
-        with open("app/data/send_history.json", "r") as f:
-            data = json.load(f)
-        if "clicks" not in data:
-            data["clicks"] = 1
-        else:
-            data["clicks"] += 1
-
-        with open("app/data/send_history.json", "w") as f:
-            json.dump(data, f, indent=2)
-
-    except Exception as e:
-        print(e)
-    
+    supabase.table("analytics").insert({"event_type": "click"}).execute()
     return RedirectResponse(url="https://cffc-donor-engagement-system.vercel.app")
 
-def click_counter():
-    try:
-        with open("app/data/send_history.json", "r") as f:
-            data = json.load(f)
-        return {"clicks": data.get("clicks", 0)}
-    except:
-        return {"clicks": 0}
+def email_open():
+    supabase.table("analytics").insert({"event_type": "open"}).execute()
+    pixel = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n\xb4\x00\x00\x00\x00IEND\xaeB`\x82'
+    return Response(content=pixel, media_type="image/png")
 
+def click_counter():
+    response = supabase.table("analytics").select("*").eq("event_type", "click").execute()
+    return {"clicks": len(response.data)}
+
+def open_counter():
+    response = supabase.table("analytics").select("*").eq("event_type", "open").execute()
+    return {"opens": len(response.data)}
+
+def get_group(group: str):
+    if group == "all":
+        # Retrieves SQL data from supabase
+        response = supabase.table("subscribers").select("email").execute()
+        # Changes SQL dictionary data into list
+        response = [row["email"] for row in response.data]
+        # Removes duplicate subscribers
+        response = list(set(response))
+    else:
+        response = supabase.table("subscribers").select("email").eq("group", group).execute()
+        response = [row["email"] for row in response.data]
+    return response
 
 # def add_subscriber(new_email: str):
 #     try:

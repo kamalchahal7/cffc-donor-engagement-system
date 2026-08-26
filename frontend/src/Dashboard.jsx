@@ -6,6 +6,7 @@ function Dashboard() {
     const [sending, setSending] = useState(false)
     const [showAll, setShowAll] = useState(false)
     const [clickCount, setClickCount] = useState(0)
+    const [openCount, setOpenCount] = useState(0)
 
     // const [newEmail, setNewEmail] = useState('')
 
@@ -19,17 +20,19 @@ function Dashboard() {
             .then(data => setSendHistory(data.sends))
         fetch("https://cffc-donor-engagement-system.onrender.com/click_count")
             .then(response => response.json())
-            .then(data => setClickCount(data.clicks))            
+            .then(data => setClickCount(data.clicks))  
+        fetch("https://cffc-donor-engagement-system.onrender.com/open_count")
+            .then(response => response.json())
+            .then(data => setOpenCount(data.opens))            
     }, [])
 
-    const handleSend = () => {
+    const handleSend = (group) => {
         setSending(true)
-        fetch("https://cffc-donor-engagement-system.onrender.com/send_newsletter_all", { method: "POST" })
+        fetch(`https://cffc-donor-engagement-system.onrender.com/send_newsletter_group?group=${group}`, { method: "POST" })
             .then(response => response.json())
             .then(result => {
                 alert(result.message)
                 setTimeout(() => setSending(false), 5000)
-                setSending(false)
                 // Re-fetch updated data
                 fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
                     .then(response => response.json())
@@ -57,13 +60,17 @@ function Dashboard() {
                     <p className='text-gray-500'>Newsletters Sent</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
+                    <p className='text-4xl font-bold'>{openCount}</p>
+                    <p className='text-gray-500'>Total Emails Opened</p>
+                </div>
+                <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{clickCount}</p>
-                    <p className='text-gray-500'>Total Donation Page Visits</p>
+                    <p className='text-gray-500'>Total Site Visits</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>
                         {sendHistory.length > 0
-                            ? new Date(sendHistory[sendHistory.length - 1].timestamp).toLocaleDateString()
+                            ? new Date(sendHistory[sendHistory.length - 1].created_at).toLocaleDateString()
                             : "N/A"}
                     </p>
                     <p className='text-gray-500'>Last Newsletter Sent</p>
@@ -71,9 +78,31 @@ function Dashboard() {
             </div>
             
             {/* Send Button */}
-            <div className='text-center mb-8'>
+            <div className='text-center mb-8 flex flex-col md:flex-row justify-center gap-3'>
                 <button 
-                    onClick={handleSend}
+                    onClick={() => handleSend("donors")}
+                    disabled={sending}
+                    className='bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending ? "Sending..." : "Send Newsletter to Donors"}
+                </button>
+
+                <button 
+                    onClick={() => handleSend("teachers")}
+                    disabled={sending}
+                    className='bg-violet-600 hover:bg-violet-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending ? "Sending..." : "Send Newsletter to Teachers"}
+                </button>
+
+                <button 
+                    onClick={() => handleSend("volunteers")}
+                    disabled={sending}
+                    className='bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending ? "Sending..." : "Send Newsletter to Volunteers"}
+                </button>
+            </div>
+            <div className="text-center mb-8">
+                <button 
+                    onClick={() => handleSend("all")}
                     disabled={sending}
                     className='bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
                         {sending ? "Sending..." : "Send Newsletter to All Subscribers"}
@@ -114,7 +143,7 @@ function Dashboard() {
                 <h2 className='text-xl font-bold mb-4'>Send History</h2>
                 {[...sendHistory].reverse().slice(0, showAll ? sendHistory.length : 5).map((send, index) => (
                     <div key={index} className='bg-white shadow-sm rounded-lg p-4 mb-2 flex justify-between'>
-                        <p>{new Date (send.timestamp).toLocaleString()}</p>
+                        <p>{new Date(send.created_at).toLocaleString()}</p>
                         <p className=''>{send.num_sent} emails sent</p>
                     </div>
                 ))}

@@ -51,7 +51,24 @@
     {
       "timestamp": "2026-08-24T01:15:35.017343",
       "num_sent": 2
+    },
+    {
+      "timestamp": "2026-08-26T19:52:31.168195Z",
+      "num_sent": 3
+    },
+    {
+      "timestamp": "2026-08-26T19:54:24.057034Z",
+      "num_sent": 3
+    },
+    {
+      "timestamp": "2026-08-26T19:54:37.033208Z",
+      "num_sent": 3
+    },
+    {
+      "timestamp": "2026-08-26T19:55:50.840172Z",
+      "num_sent": 3
     }
   ],
-  "clicks": 2
+  "clicks": 2,
+  "opens": 0
 }
