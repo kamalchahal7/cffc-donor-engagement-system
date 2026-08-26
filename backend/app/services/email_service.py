@@ -49,8 +49,9 @@ def subs_count():
     return 0
 
 def log_send(num_sent: int):
-    supabase.table("analytics").insert({"event_type": "send", "num_sent": num_sent}).execute()
+    response = supabase.table("analytics").insert({"event_type": "send", "num_sent": num_sent}).execute()
     return True
+    # return response.data[0]["id"]
 
 def get_logs():
     response = supabase.table("analytics").select("*").eq("event_type", "send").execute()
