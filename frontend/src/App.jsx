@@ -110,8 +110,8 @@ function App() {
               <span className="bg-red-50 px-4 py-2 rounded-full">Fishing Equipment</span>
               <span className="bg-red-50 px-4 py-2 rounded-full">Blankets</span>
               <span className="bg-red-50 px-4 py-2 rounded-full">Hoodies</span>
-              <span className="bg-red-50 px-4 py-2 rounded-full">Books</span>
-              <span className="bg-red-50 px-4 py-2 rounded-full">Electronics</span>
+              <span className="bg-red-50 px-4 py-2 rounded-full">Children's Books</span>
+              <span className="bg-red-50 px-4 py-2 rounded-full">Laptops & Cell Phones</span>
             </div>
           </div>
         </div>

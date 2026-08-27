@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react'
 function Dashboard() {
     const [subscriberCount, setSubscriberCount] = useState(0)
     const [sendHistory, setSendHistory] = useState([])
-    const [sending, setSending] = useState(false)
+    const [sending, setSending] = useState("")
     const [showAll, setShowAll] = useState(false)
     const [clickCount, setClickCount] = useState(0)
-    const [openCount, setOpenCount] = useState(0)
+    // const [openCount, setOpenCount] = useState(0)
 
     // const [newEmail, setNewEmail] = useState('')
 
@@ -21,18 +21,18 @@ function Dashboard() {
         fetch("https://cffc-donor-engagement-system.onrender.com/click_count")
             .then(response => response.json())
             .then(data => setClickCount(data.clicks))  
-        fetch("https://cffc-donor-engagement-system.onrender.com/open_count")
-            .then(response => response.json())
-            .then(data => setOpenCount(data.opens))            
+        // fetch("https://cffc-donor-engagement-system.onrender.com/open_count")
+        //     .then(response => response.json())
+        //     .then(data => setOpenCount(data.opens))            
     }, [])
 
     const handleSend = (group) => {
-        setSending(true)
+        setSending(group)
         fetch(`https://cffc-donor-engagement-system.onrender.com/send_newsletter_group?group=${group}`, { method: "POST" })
             .then(response => response.json())
             .then(result => {
                 alert(result.message)
-                setTimeout(() => setSending(false), 5000)
+                setSending("")
                 // Re-fetch updated data
                 fetch("https://cffc-donor-engagement-system.onrender.com/send_history")
                     .then(response => response.json())
@@ -59,13 +59,13 @@ function Dashboard() {
                     <p className='text-4xl font-bold'>{sendHistory.length}</p>
                     <p className='text-gray-500'>Newsletters Sent</p>
                 </div>
-                <div className='bg-white shadow-md rounded-lg p-6 text-center'>
+                {/* <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{openCount}</p>
-                    <p className='text-gray-500'>Total Emails Opened</p>
-                </div>
+                    <p className='text-gray-500'>Emails Opened</p>
+                </div> */}
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>{clickCount}</p>
-                    <p className='text-gray-500'>Total Site Visits</p>
+                    <p className='text-gray-500'>Site Visits</p>
                 </div>
                 <div className='bg-white shadow-md rounded-lg p-6 text-center'>
                     <p className='text-4xl font-bold'>
@@ -81,31 +81,31 @@ function Dashboard() {
             <div className='text-center mb-8 flex flex-col md:flex-row justify-center gap-3'>
                 <button 
                     onClick={() => handleSend("donors")}
-                    disabled={sending}
-                    className='bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
-                        {sending ? "Sending..." : "Send Newsletter to Donors"}
+                    disabled={sending != ""}
+                    className='bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending == "donors" ? "Sending..." : "Send Newsletter to Donors"}
                 </button>
 
                 <button 
                     onClick={() => handleSend("teachers")}
-                    disabled={sending}
-                    className='bg-violet-600 hover:bg-violet-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
-                        {sending ? "Sending..." : "Send Newsletter to Teachers"}
+                    disabled={sending != ""}
+                    className='bg-violet-600 hover:bg-violet-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending == "teachers" ? "Sending..." : "Send Newsletter to Teachers"}
                 </button>
 
                 <button 
                     onClick={() => handleSend("volunteers")}
-                    disabled={sending}
-                    className='bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
-                        {sending ? "Sending..." : "Send Newsletter to Volunteers"}
+                    disabled={sending != ""}
+                    className='bg-teal-600 hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending == "volunteers" ? "Sending..." : "Send Newsletter to Volunteers"}
                 </button>
             </div>
             <div className="text-center mb-8">
                 <button 
                     onClick={() => handleSend("all")}
-                    disabled={sending}
-                    className='bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
-                        {sending ? "Sending..." : "Send Newsletter to All Subscribers"}
+                    disabled={sending != ""}
+                    className='bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-lg font-bold text-xl transition-colors duration-200'>
+                        {sending == "all" ? "Sending..." : "Send Newsletter to All Subscribers"}
                 </button>
             </div>
 

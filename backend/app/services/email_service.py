@@ -61,18 +61,18 @@ def click():
     supabase.table("analytics").insert({"event_type": "click"}).execute()
     return RedirectResponse(url="https://cffc-donor-engagement-system.vercel.app")
 
-def email_open():
-    supabase.table("analytics").insert({"event_type": "open"}).execute()
-    pixel = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n\xb4\x00\x00\x00\x00IEND\xaeB`\x82'
-    return Response(content=pixel, media_type="image/png")
+# def email_open():
+#     supabase.table("analytics").insert({"event_type": "open"}).execute()
+#     pixel = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\nIDATx\x9cc\x00\x01\x00\x00\x05\x00\x01\r\n\xb4\x00\x00\x00\x00IEND\xaeB`\x82'
+#     return Response(content=pixel, media_type="image/png")
 
 def click_counter():
     response = supabase.table("analytics").select("*").eq("event_type", "click").execute()
     return {"clicks": len(response.data)}
 
-def open_counter():
-    response = supabase.table("analytics").select("*").eq("event_type", "open").execute()
-    return {"opens": len(response.data)}
+# def open_counter():
+#     response = supabase.table("analytics").select("*").eq("event_type", "open").execute()
+#     return {"opens": len(response.data)}
 
 def get_group(group: str):
     if group == "all":
