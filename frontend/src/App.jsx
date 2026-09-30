@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react"
 function App() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
+      <Analytics />
       {/* Hero Section */}
       <section className="bg-[#0f2b4c] text-white text-center py-20 px-4 relative">
         <img 
